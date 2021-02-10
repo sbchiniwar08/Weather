@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <title>Document</title>
+</head>
+<body>
+    <div class="container">
+    </div>
+    <script>
+        async function getAllCountry(){
+         var countries = await fetch("https://restcountries.eu/rest/v2/all");
+         var data = await countries.json();
+        var startRow = "<div class='row row-col-1 row-cols-md-3 g-4'>";
+        var card = '<div class="col" style="background-color:silver;text-align:center"> <div class="card border-primary mb-3" style="max-width: 18rem;">';
+        var cardEnd = '</div> </div>';
+        var endRow = "</div>";
+        var i=0;
+        var start="";
+        var end="";
+        var toAppend="";
+        data.forEach(country => {
+            start="";
+            end="";
+            if(i==0)
+            {
+                start+= startRow;
+            }
+            if(i%3==0 || i==0)
+            {
+                start += card;
+                start+= '<h3 style="background-color:black;color:white">'+ country.name +'</h3>'
+                start += '<img src="' + country.flag + '" style="width:33%">';
+                start+= '<p><h3>Capital:' + country.capital + '</h3><br><h3>Region:' + country.region + '</h3><br><h3>Country Code:'+ country.alpha3Code + '</h3>';
+                start+= '<button onClick="getWeather("'+ country.alpha2Code + '","' + country.capital + '")">Click for Weather</button></p>';
+                start+=cardEnd;
+            }
+            else if(i!=0 &&(i%3==2 || i==data.length-1))
+            {
+                start+= card;                 
+                start+= '<h3 style="background-color:black;color:white;text-align:center">'+ country.name +'</h3>'
+                start += '<img src="' + country.flag + '" style="width:33%">';
+                start+= '<p><h3>Capital:' + country.capital + '</h3><br><h3>Region:' + country.region + '</h3><br><h3>Country Code:'+ country.alpha3Code + '</h3>';
+                start+= '<button onClick="getWeather("'+ country.alpha2Code + '","' + country.capital + '")">Click for Weather</button></p>';
+                start+=cardEnd;
+            }
+            else{
+                start+= card;
+                start+= '<h3 style="background-color:black;color:white;text-align:center">'+ country.name +'</h3>'
+                start += '<img src="' + country.flag + '" style="width:33%">';
+                start+= '<p><h3>Capital:' + country.capital + '</h3><br><h3>Region:' + country.region + '</h3><br><h3>Country Code:'+ country.alpha3Code + '</h3>';
+                start+= '<button onClick="getWeather("'+ country.alpha2Code + '","' + country.capital + '")">Click for Weather</button></p>';
+                start+=cardEnd;
+            }
+            toAppend += start+end;
+            i++;
+        });
+        toAppend+= endRow;
+    $('.container').append(toAppend);
+        }
+        async function getWeather(CODE,City)
+        {
+            var String = "https://api.openweathermap.org/data/2.5/weather?q="+ city + "," + code +"&appid=886705b4c1182eb1c69f28eb8c520e20";
+            var weather = await fetch(String);
+            var result = await weather.json();
+            console.log(weather);
+        }
+        getAllCountry();
+    </script>
+</body>
+</html>
